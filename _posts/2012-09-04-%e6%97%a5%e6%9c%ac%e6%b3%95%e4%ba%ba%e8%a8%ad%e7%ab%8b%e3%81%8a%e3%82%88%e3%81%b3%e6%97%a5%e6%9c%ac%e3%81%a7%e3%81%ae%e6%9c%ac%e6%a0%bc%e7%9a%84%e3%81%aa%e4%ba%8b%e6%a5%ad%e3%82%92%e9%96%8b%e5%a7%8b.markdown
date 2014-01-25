@@ -1,0 +1,22 @@
+---
+layout: post
+status: publish
+published: true
+title: 日本法人設立および日本での本格的な事業を開始を発表
+author: 今中 崇泰
+author_login: timanaka
+author_email: timanaka@engineyard.com
+wordpress_id: 12
+wordpress_url: http://www.engineyard.co.jp.php53-27.dfw1-2.websitetestlink.com/blog/?p=12
+date: 2012-09-04 10:29:02.000000000 +09:00
+categories:
+- Uncategorized
+tags: []
+comments: []
+---
+<strong>信頼性、安定性、拡張性に富んだ商用グレードのPaaSを日本市場に向け展開 </strong>
+
+最先端の商用グレードのPasS（<a title="Platform as a Service とは" href="http://www.engineyard.co.jp/platform-as-a-service" target="_blank">Platform as a Service</a>）ソリューションで世界のビジネスをリードする米国 Engine Yard, Inc. は、日本法人となる株式会社 Engine Yard を2012年 3月14日付で設立し、日本市場における同社のPaaSソリューションの展開を狙い、本格的に事業を開始することを2012年 9月 4日に発表しました。
+<ul>
+	<li><a title="商用グレードの PaaS ベンダーEngine Yard、日本法人設立および日本での本格的な事業を開始" href="http://www.engineyard.co.jp/company/press/2012-09-04-商用グレードの-paas-ベンダーengine-yard、日本法人設立および日本での本格的な事業を開始" target="_blank">プレスリリース</a></li>
+</ul>

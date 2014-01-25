@@ -1,0 +1,214 @@
+---
+layout: post
+status: publish
+published: true
+title: Rails 3 のルーティングについて (翻訳版)
+author: Rizwan Reza
+author_login: rizwanreza
+author_email: work@rizwanreza.com
+wordpress_id: 30
+wordpress_url: http://www.engineyard.co.jp/blog/?p=30
+date: 2012-10-03 08:47:01.000000000 +09:00
+categories:
+- Uncategorized
+tags: []
+comments: []
+---
+<div class="note">今日のブログ記事はゲスト コミュニティ投稿者の <a href="http://www.rizwanreza.com/">Rizwan Reza</a> 氏が <a href="http://www.engineyard.com/blog/2010/the-lowdown-on-routes-in-rails-3/" title="The Lowdown on Routes in Rails 3" target="_blank">2010 年 3 月 30 日に執筆したブログ記事</a>の翻訳版です。同氏は Rails コミュニティのアクティブなメンバーであり、最近は膨れ上がった感のある Lighthouse キューのクリーンアップに取り組んでいます。</div>
+ちょっと待ってください!これから重要なお知らせをしますが、ちょっとショックかも知れないので、腰を落ち着けて聞いていただければと思います。いいでしょうか? 重要なお知らせとは、「Rails 2 でのルーティング取り扱いの知識はすべて過去のものになった」ということです。Rails 3 では、これまで身に付けたことを全部忘れて、新しいルーティング方法を腕まくりで学ぶ必要があります。ルーティングは高速でクリーンになり、ずっと Ruby に近くなっています。
+
+今回の投稿では、Rails 3 のルーティングの基礎を順に見ていきます。ルーティングの方法は書き直されていますが、それにはもっともな理由があります。以下の説明をお読みになれば、きっと納得いただけるはずです。
+
+まずは次のコードを見てください。新しい DSL がうまく生かされています。
+<pre lang="ruby" escaped="true">resources :products do
+  resource :category
+
+  member do
+    post :short
+  end
+
+  collection do
+    get :long
+  end
+end
+
+match "/posts/github" =&gt; redirect("http://github.com/rails.atom")</pre>
+これを<em>従来の</em>方法と比べてみましょう。
+<pre lang="ruby" escaped="true">map.resources :products, :member =&gt; {:short =&gt; :post}, :collection =&gt; {:long =&gt; :get} do |products|
+  products.resource :category
+end</pre>
+Rails 3 の例はずっとクリーンで Ruby に近い形となっているのがわかりますね。ではさっそく、実際に Rails 3 で各種のルーティングを定義する方法についてひと通り説明していきたいと思います。
+<h2>既定のルーティング</h2>
+Rails 3 の既定のルーティング <code>match '/:controller(/:action(/:id))'</code> は、オプションのパラメーターがかっこで囲まれ、ずっと明示的になっています。
+<h2>標準ルーティング</h2>
+コントローラーとアクションに異なるキーを定義せず、<code>catalog#view</code> だけを使います。<em>とても</em>簡単ですね。
+<pre lang="ruby" escaped="true">match 'products/:id', :to =&gt; 'catalog#view'</pre>
+Rails 2 では次のようにしていました。
+<pre lang="ruby" escaped="true">map.connect 'products/:id', :controller =&gt; 'products', :action =&gt; 'view'</pre>
+<h2>名前を指定したルーティング</h2>
+<code>link_to</code> などのヘルパー メソッドでアクションやコントローラーに対して手動でハッシュを定義する代わりに、名前を指定したルーティングによって <code>posts_url</code> や <code>posts_path</code> といったヘルパーを生成します。
+<pre lang="ruby" escaped="true">match 'logout', :to =&gt; 'sessions#destroy', :as =&gt; "logout"</pre>
+キー <code>:as</code> はヘルパーを生成するための名前を指定します。Rails 2 では次のようにしていました。
+<pre lang="ruby" escaped="true">map.logout '/logout', :controller =&gt; 'sessions', :action =&gt; 'destroy'</pre>
+<h2>空のルーティング</h2>
+ウェブサイトのルート ディレクトリは空のルーティングです。Rails 2 ではこのディレクトリへの便利なショートカットが追加されましたが、Rails 3 ではさらにシンプルになっています。
+<pre lang="ruby" escaped="true"># Rails 3
+root :to =&gt; 'welcome#show'
+
+# Rails 2
+map.root :controller =&gt; "welcome", :action =&gt; 'show'</pre>
+<h2>省略形</h2>
+Rails 3 の改訂されたルーティングでは、よく使われるルーティングの便利なショートカットが利用できます。2 種類の省略形があります。まず、<code>:to</code> の省略形を使用すると、次のように <code>:to</code> キーをスキップしてマッチャーへのルーティングを直接に指定することができます。
+<pre lang="ruby" escaped="true">match "/account" =&gt; "account#index"
+match "/info" =&gt; "projects#info", :as =&gt; "info"</pre>
+次に、<code>match</code> の省略形を使用すると、パスとコントローラーを、そのアクションと共に同時に定義できます。
+<pre lang="ruby" escaped="true">match "account/overview"
+
+# identical to
+
+match "account/overview", :to =&gt; "account#overview"</pre>
+<h2>動詞ルーティング</h2>
+<code>:via</code> を使用してルートを HTTP 要求のみに限定できますが、動詞ルーティングを使用するとさらに便利になります。それだけでなく、省略形を一緒に使用することもできます。
+<pre lang="ruby" escaped="true">get "account/overview"
+
+# identical to
+
+match "account/overview", :to =&gt; "account#overview", :via =&gt; "get"</pre>
+<h2>キー</h2>
+match メソッド (および動詞の省略形) にはいくつかのオプション キーがあります。
+<h3>:as</h3>
+<code>:as</code> キーはルーティングに名前を付けます。すると、<code>url_for</code> を利用できるときはいつでも、名前指定のルーティング ヘルパーを使用できるようになります (コントローラー、テスト、メーラーなど)。リソース ルーティングは (<code>resources</code> ヘルパーを使用して) Rails 2.3 と同様に名前指定のルーティングを自動的に作成します。
+<pre lang="ruby" escaped="true">match "account/overview/:id", :as =&gt; "overview"
+
+# in your controller
+
+overview_path(12) #=&gt; "/account/overview/12"</pre>
+<h3>:via</h3>
+一連の動詞を指定して、ルーティングに対してそれらの HTTP 要求のみが受け入れられるようにします。
+<pre lang="ruby" escaped="true">match "account/setup", :via =&gt; [:get, :post]</pre>
+<h2>Rack</h2>
+Rack は Ruby フレームワークに統合 API を提供する、ウェブ サーバーとの便利なインターフェイスです。今日ではほとんどの Ruby フレームワークが Rack を基盤として構築されています。最近は Rack のサポートが組み込まれているので、アプリケーションを Rails 固有のものとする必要はありません。したがって、Sinatra や Cramp など、任意の Rack 対応フレームワークによってアプリケーションの各部を処理できます。Rails スタックを完全にスキップして要求を Rack アプリケーションに渡すことが可能です。
+
+次に示すのは Sinatra アプリケーションの例です。
+<pre lang="ruby" escaped="true">class HomeApp &lt; Sinatra::Base
+  get "/" do
+    "Hello World!"
+  end
+end
+
+Rizwan::Application.routes do
+  match "/home", :to =&gt; HomeApp
+end</pre>
+次に示すのは Rack アプリケーションの例です。
+<pre lang="ruby" escaped="true">match "/foo", :to =&gt; proc {|env| [200, {}, ["Hello world"]] }
+
+match 'rocketeer.js' =&gt; ::TestRoutingMapper::RocketeerApp
+
+RocketeerApp = lambda { |env|
+  [200, {"Content-Type" =&gt; "text/html"}, ["javascripts"]]
+}</pre>
+<h2>リソースベースのルーティング</h2>
+Rails 1.2 以降、ルーターの使用にはリソースベースのルーティングが推奨されてきました。Rails コア チームはこの事実を認識した上で、さらに便利な強化機能をいくつか追加しました。次に示すのは、Rails 3 における典型的な RESTful なルーティングです。
+<pre lang="ruby" escaped="true">resources :products</pre>
+このコードは、頻繁に使用される便利なヘルパーをすべて生成し、さらに URL を正しくルーティングします。従来と同様、1 つの行に複数のリソースを追加することもできます。
+<pre lang="ruby" escaped="true">resources :products, :posts, :categories</pre>
+<h3>RESTful な追加アクション</h3>
+RESTful なアーキテクチャが提供する 7 つのアクションだけでなく、リソースに追加のアクションを定義することもできます。しかし、1 つのリソースにいくつものアクション定義する場合、それぞれが個別のリソースとして処理される可能性があるので十分な注意が必要です。
+
+RESTful なアクションは、いくつかの方法でこのリソースに追加することができます。以下に挙げるのは、<code>collection</code> ブロック内の RESTful なアクションの例です。
+<pre lang="ruby" escaped="true">resources :products do
+  collection do
+    get  :sold
+    post :on_offer
+  end
+end</pre>
+また、次のようなインライン メンバーの RESTful なアクションもあります。
+<pre lang="ruby" escaped="true">resources :products do
+  get :sold, :on =&gt; :member
+end</pre>
+それだけでなく、7 つの既定の RESTful アクションのスコープを再定義して拡張することも可能です。
+<pre lang="ruby" escaped="true">resources :session do
+  collection do
+    get :create
+  end
+end</pre>
+<code>create</code> アクションは通常 POST 要求のみを受け入れますが、このコードによって GET 要求も受け入れ可能となります。
+<pre lang="ruby" escaped="true">resource :session do
+  get :create
+end</pre>
+<h3>入れ子リソース</h3>
+Rails 2 において入れ子リソースは、ブロックにより定義するか、<code>:has_many</code> または <code>:has_one</code> キーを使用して定義していました。この両者がブロックで置き換えられ、関連リソースの定義を行うインターフェイスがより Ruby に近くなりました。
+
+次に示すのは、多くのタスクと人名が含まれるプロジェクトのルーティングです。
+<pre lang="ruby" escaped="true">resources :projects do
+  resources :tasks, :people
+end</pre>
+<h3>名前空間ベースのリソース</h3>
+これは、フォルダー内にリソースを定義する場合に特に便利で、次に示すように実に明快です。
+<pre lang="ruby" escaped="true">namespace :admin do
+  resources :projects
+end</pre>
+<h3>リソースの名前変更</h3>
+<code>:as</code> キーを使用してリソースの名前を変更することもできます。次のコードでは、リソース ベースのルーティングで <code>:as</code> を使用して、デバイスへの製品パスを変更します。
+<pre lang="ruby" escaped="true">namespace :forum do
+  resources :products, :as =&gt; 'devices' do
+    resources :questions
+  end
+end</pre>
+<h3>リソースの制限</h3>
+リソースを指定のアクションのみに制限することができます。
+<pre lang="ruby" escaped="true">resources :posts, :except =&gt; [:index]
+
+resources :posts, :only =&gt; [:new, :create]</pre>
+<h3>パス名の変更</h3>
+特定の REST アクションに対して異なるパス名を定義できます。これは RESTful ルーティングのカスタマイズに役立ちます。次のコードは、/projects/1/cambiar を編集アクションにルーティングします。
+<pre lang="ruby" escaped="true">resources :projects, :path_names =&gt; { :edit =&gt; 'cambiar' }</pre>
+<h2>リダイレクト (redirect) メソッド</h2>
+Rails 3 で新しく追加された redirect メソッドは、従来とは桁違いに便利になっています。たとえば、指定された任意のパスにリダイレクトを行って、最終的には完全な URI へと渡すこともできます。これは <a href="http://github.com/larspind/redirect_routing">redirect_routing</a> などの Rails プラグインで従来行われてきた機能です。
+
+また、redirect メソッドでは汎用アクションも導入しています。汎用アクションは Rails 3 に特有の機能で、redirect に渡される内容に応じて、複数の複雑なパスに同じアクションを提供する方法です。
+
+次のコードは <code>/foo/1</code> を <code>/bar/1s</code> にリダイレクトします。
+<pre lang="ruby" escaped="true">match "/foo/:id", :to =&gt; redirect("/bar/%{id}s")</pre>
+次のコードは <code>/account/proc/john</code> を <code>/johns</code> にリダイレクトします。
+<pre lang="ruby" escaped="true">match 'account/proc/:name', :to =&gt; redirect {|params| "/#{params[:name].pluralize}" }</pre>
+<code>redirect</code> は、他の制限やスコープと異なり、ブロック内では使用できない点に注意してください。
+<h2>制限 (constraints) メソッド</h2>
+constraints を使用して、ルーティングにおけるパス セグメントの要件を指定できます。また、いくつかのメソッドを使用してある事項が特定条件に一致するかどうかを確認することも可能です。たとえば、要求が AJAX かどうかを確認するルーティングなどが定義できます。
+
+次のコードでは正規表現を使用して、1 桁の ID のみを受け入れるようにルーティングが制限されています。
+<pre lang="ruby" escaped="true">match "/posts/show/:id", :to =&gt; "posts#index", :constraints =&gt; {:id =&gt; /\d/}</pre>
+<h2>スコープ (scope) メソッド</h2>
+scope メソッドに単一の記号を渡すと、その記号はコントローラーとして想定されます。引数が文字列の場合には、scope メソッドはその文字列をパスの冒頭に追加します。
+
+scope には <code>path_segments</code> も指定できます。これは制限が可能なので、ルーティングの柔軟性が高まります。
+<pre lang="ruby" escaped="true">controller :articles do
+  scope '/articles', :name_prefix =&gt; 'article' do
+    scope :path =&gt; '/:title', :title =&gt; /[a-z]+/, :as =&gt; :with_title do
+      match '/:id', :to =&gt; :with_id
+    end
+  end
+end
+
+scope :posts, :name_prefix =&gt; "posts" do
+  match "/:action", :as =&gt; "action"
+end
+
+scope ':access_token', :constraints =&gt; { :access_token =&gt; /\w{5,5}/ } do # See constraint here
+  resources :rooms
+end</pre>
+ここでわかるように、scope の引数として文字列を渡すとその文字列はパスの冒頭に追加されます。Rails 2 では <code>path_prefix</code> を使ってこれを行っていました。<code>name_prefix</code> は基本的に以前と同じです。
+<h2>オプションのセグメント</h2>
+以前のバージョンの Rails と異なり、パス セグメントはルーティングでオプションとできるようになりました。オプションのセグメントは、アクションにパラメーターとして渡されるパス セグメントである<em>必要は</em>ありません。既定のルーティングは、オプションのセグメントの良い使用例です。次の例では <code>/posts/new</code> と <code>/posts</code> の両方が posts コントローラーの作成アクションにリダイレクトされていますが、<code>/posts/edit</code> は機能しません。
+<pre lang="ruby" escaped="true">match 'posts(/new)', :to =&gt; 'posts#create'</pre>
+次に示すのは、リソースの前にパスを追加できるオプションのパス スコープです。
+<pre lang="ruby" escaped="true">scope '(:locale)', :locale =&gt; /en|pl/ do
+  resources :descriptions
+end</pre>
+<h2>パーベイシブ ブロック</h2>
+例からも明らかなように、Rails 3 のルーティングでは、ブロックを通常渡すほぼすべてのメソッドに対しパーベイシブ ブロックが使用され、<code>routes.rb</code> における DRY の実現を助けます。
+<pre lang="ruby" escaped="true">controller :posts do
+  match 'export', :to =&gt; :new, :as =&gt; :export_request
+  match '/:action'
+end</pre>
+現時点でこれらのメソッドをすべて使用する Rails 開発者はまずいませんが、ニーズが生じたとき、つまり、より複雑なルーティングを定義する必要が出てきたときに、上記の情報を知っておくと役に立ちます。この機能は既に組み込まれているので、プラグインを使ったり細工をする必要はありません。Rails 3 のルーティングはこれまでと次元が違うと言ってもよいと思います。

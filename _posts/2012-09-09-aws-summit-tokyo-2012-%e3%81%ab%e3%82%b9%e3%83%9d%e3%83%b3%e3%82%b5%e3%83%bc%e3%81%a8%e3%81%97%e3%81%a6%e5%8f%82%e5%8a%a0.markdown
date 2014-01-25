@@ -1,0 +1,23 @@
+---
+layout: post
+status: publish
+published: true
+title: AWS SUMMIT TOKYO 2012 にスポンサーとして参加
+author: 今中 崇泰
+author_login: timanaka
+author_email: timanaka@engineyard.com
+wordpress_id: 18
+wordpress_url: http://www.engineyard.co.jp.php53-27.dfw1-2.websitetestlink.com/blog/?p=18
+date: 2012-09-09 14:28:26.000000000 +09:00
+categories:
+- Uncategorized
+tags: []
+comments: []
+---
+AWS SUMMIT はアマゾン ウェブ サービス様が主催されるクラウド カンファレンスで全世界をサーキットする、各国で1日間開催されるイベントですが、初開催となる東京での「<a title="AWS SUMMIT TOKYO 2012" href="http://www.awssummittokyo.com/?id=engineyard" target="_blank">AWS SUMMIT TOKYO 2012</a>」は、2012年9月13日から14日の2日間にわたる拡張版のカンファレンスです。
+
+弊社 Engine Yard はスポンサーとして参加させていただき、展示ブースもご用意しております。展示ブースでは、Amazon Web Services を IaaS 基盤とする弊社の主力製品「Engine Yard Cloud」の製品説明だけでなく、操作デモをご覧いただきたいと思います。
+
+「<a title="AWS SUMMIT TOKYO 2012" href="http://www.awssummittokyo.com/?id=engineyard" target="_blank">AWS SUMMIT TOKYO 2012</a>」にお越しの際には、是非、Engine Yard の展示ブースにもお立ち寄りください。
+
+「<a title="AWS SUMMIT TOKYO 2012" href="http://www.awssummittokyo.com/?id=engineyard" target="_blank">AWS SUMMIT TOKYO 2012</a>」については、弊社「<a title="Engine Yard イベント ページ" href="http://www.engineyard.co.jp/company/events" target="_blank">イベント</a>」ページ (URL: <a title="Engine Yard イベント ページ" href="http://www.engineyard.co.jp/company/events" target="_blank">http://www.engineyard.co.jp/company/events</a> )にも掲載しています。

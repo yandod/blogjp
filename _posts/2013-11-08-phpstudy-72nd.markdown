@@ -1,0 +1,51 @@
+---
+layout: post
+status: publish
+published: true
+title: '第72回PHP勉強会レポート #phpstudy'
+author: 安藤 祐介
+author_login: yando
+author_email: yando@engineyard.com
+wordpress_id: 1772
+wordpress_url: http://www.engineyard.co.jp/blog/?p=1772
+date: 2013-11-08 12:30:08.000000000 +09:00
+categories:
+- Uncategorized
+tags: []
+comments: []
+---
+<img src="http://www.engineyard.co.jp/blog/wp-content/uploads/2013/11/DSC05998.jpg" alt="DSC05998" width="1280" height="853" class="alignnone size-full wp-image-1773" />
+
+先日、<a href="http://atnd.org/events/44600" target="_blank">第72回PHP勉強会</a>が開催されました。PHPカンファレンス明けということで2ヶ月ぶりの開催という事で、内容が濃い発表が多かったように感じます。
+
+撮影した写真はFacebook上にアップしてあります。
+<a href="https://www.facebook.com/media/set/?set=a.393083254155935.1073741876.157481417716121&type=1">第72回PHP勉強会 #phpstudy</a>
+
+当日のツイートのまとめはこちら
+<a href="http://togetter.com/li/584361">第72回PHP勉強会 #phpstudy - Togetter</a>
+
+その他のブログ記事は見つけ次第、こちらに。
+<a href="http://m-shige1979.hatenablog.com/entry/2013/10/29/055914">第72回 PHP勉強会@東京に参加しました。 - m_shige1979のささやかな抵抗と欲望の日々</a>
+
+<h3>20分枠 </h3>
+http://www.youtube.com/watch?v=DQwSud9ZHaU
+
+<script async class="speakerdeck-embed" data-id="77c27f5023eb01314e123239ed40666d" data-ratio="1.2994923857868" src="//speakerdeck.com/assets/embed.js"></script>
+竹馬さんからはPHPカンファレンスでは発表できなかった本来の内容をお願いしました。ビールの力もあってとてもテンションの高い内容なので動画で見て頂いた方が楽しめると思います。アジャイルやリーンに関するコンテンツは最近は多いですが、PHPユーザー向けの視点から出発しているものは多くはないのでとても参考になると思います。
+
+
+<script async class="speakerdeck-embed" data-id="3f28abe021ce0131d38f7e75dde7eba9" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+haltさんからはトランザクションとロックについて知っているようで知らない部分も交えて丁寧に説明して頂きました。さまざまなツールやライブラリの情報はネット上で豊富ですが、トランザクションについてあらためてまとめた内容は目新しかったように思います。
+実際に開発をしていてトランザクションなどの知識について見直したい時にチーム内のミーティングなどで見なおしてみると良いのではないでしょうか。
+こちらもスライドよりも動画の方が情報量が多いので動画を確認するのが良いと思います。
+
+<h3>LT枠</h3>
+http://www.youtube.com/watch?v=Rc_264eiQzk
+
+<iframe src="http://www.slideshare.net/slideshow/embed_code/27648586?rel=0" width="512" height="421" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="https://www.slideshare.net/hinakano/json-schema" title="JSON SchemaとPHP" target="_blank">JSON SchemaとPHP</a> </strong> from <strong><a href="http://www.slideshare.net/hinakano" target="_blank">Hiraku Nakano</a></strong> </div>
+「PHPはJSONで出来ている」という衝撃の事実を起点に始まる興味深いセッションです。フロントエンドとサーバサイドでバリデーションを共有するという夢を手軽に実現できるJSON Schemaは活用する余地が大きな仕組みではないでしょうか。
+セッションでもあるようにJSONが関係ない曲面であっても連想配列をJSONに変換する事でバリデーション可能というのは連想配列に掛けていたスキーマ機能を補うものと言えるでしょう。
+
+
+PHP勉強会は今後も毎月開催される予定です。最近は勉強会の感想をツイートやブログで見ることが以前に比べると少なくなりましたが、時間が経ってからや動画などで閲覧した場合についても是非フィードバックを頂ければと思います。
+
